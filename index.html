@@ -475,7 +475,7 @@ document.getElementById('v-draw').addEventListener('click', async ()=>{
   const user=`Wish: ${title}\nDetails: ${desc||'none given'}\nPeople: ${peopleText}\n${aboutText?'About her:\n'+aboutText+'\n':''}${chartText?'Her chart: '+chartText:''}`;
 
   try{
-    const res=await fetch("https://api.anthropic.com/v1/messages",{
+    const res=await fetch("https://hidden-moon-c0e1.schiefer-kimi.workers.dev/",{
       method:"POST", headers:{"Content-Type":"application/json"},
       body:JSON.stringify({model:"claude-sonnet-4-6", max_tokens:1000, system, messages:[{role:"user",content:user}]})
     });
