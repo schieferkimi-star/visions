@@ -480,15 +480,19 @@ document.getElementById('v-draw').addEventListener('click', async ()=>{
       body:JSON.stringify({model:"claude-sonnet-4-6", max_tokens:1000, system, messages:[{role:"user",content:user}]})
     });
     const data=await res.json();
+    if(!res.ok){
+      const msg=(data && data.error && data.error.message) ? data.error.message : ('HTTP '+res.status);
+      throw new Error(msg);
+    }
     const story=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim();
-    if(!story) throw new Error('empty');
+    if(!story) throw new Error('The response came back empty.');
     const v={id:uid(), wishTitle:title, story, glyph:GLYPHS[Math.floor(Math.random()*GLYPHS.length)], people:chosen.map(p=>p.name), createdAt:Date.now()};
     visions.push(v);
     await saveVisions();
     renderVisionArchive();
     showVisionObj(v);
   }catch(err){
-    document.getElementById('v-output').innerHTML='<div class="empty">The vision didn\'t come through. Try drawing again.</div>';
+    document.getElementById('v-output').innerHTML='<div class="empty">The vision didn\'t come through.<br><span style="font-size:12px; opacity:0.8;">'+esc(err.message||'Unknown error')+'</span></div>';
   }finally{ btn.disabled=false; }
 });
 
